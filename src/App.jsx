@@ -211,12 +211,9 @@ const UpdateNotification = () => {
                         <p className="text-xs text-indigo-100 opacity-90">v{updateInfo?.version} sürümü hazır.</p>
                     </div>
                     {status === 'available' && (
-                        <button 
-                            onClick={() => window.electronAPI.updateControl.download()}
-                            className="bg-white text-indigo-700 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-50 transition-colors shadow-sm"
-                        >
-                            İndir
-                        </button>
+                        <div className="bg-white/10 px-3 py-1 rounded-lg text-[10px] font-bold text-indigo-100 flex items-center animate-pulse">
+                            İndirme Başlıyor...
+                        </div>
                     )}
                     {status === 'ready' && (
                         <button 
@@ -255,6 +252,14 @@ function MainApp() {
     const [user, setUser] = useState(null);
     const [userName, setUserName] = useState('');
     const [userProfilePic, setUserProfilePic] = useState('');
+    const [appVersion, setAppVersion] = useState('...');
+
+    useEffect(() => {
+        if (window.electronAPI?.getAppVersion) {
+            window.electronAPI.getAppVersion().then(v => setAppVersion(v));
+        }
+    }, []);
+
     const isCeo = user && (user.email === 'merttekinler07@gmail.com');
     const [messages, setMessages] = useState([]);
     const [channels, setChannels] = useState([]);
@@ -837,7 +842,7 @@ function MainApp() {
         if (activeServerId !== 'home' && channels.length > 0 && !channelId) {
             navigate(`/${activeServerId}/${channels[0].id}`, { replace: true });
         }
-    }, [activeServerId, channels, channelId, navigate]);
+    }, [activeServerId, channels.length, channelId, navigate]);
 
     // Presence (Heartbeat) Sistemi - Herkesi Kapsar
     useEffect(() => {
@@ -2931,6 +2936,8 @@ function MainApp() {
                                 <span className="text-[10px] font-black text-[#23a559] tracking-wider opacity-90 shrink-0">Aktif</span>
                                 <div className="flex items-center space-x-1 shrink-0 bg-white/5 px-1 rounded-sm border border-white/5">
                                     <div className={`w-1 h-1 rounded-full ${ping < 100 ? 'bg-emerald-500' : ping < 300 ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                                    <span className="text-[9px] font-black text-slate-400 tracking-tighter uppercase">{appVersion}</span>
+                                    <span className="text-slate-600 font-bold mx-0.5 opacity-30">|</span>
                                     <span className="text-[9px] font-black text-slate-500 tracking-tighter">{ping}ms</span>
                                 </div>
                             </div>

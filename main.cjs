@@ -7,7 +7,7 @@ const { autoUpdater } = require('electron-updater');
 const isDev = !app.isPackaged;
 
 // Configure AutoUpdater
-autoUpdater.autoDownload = false; // We'll let the user trigger download
+autoUpdater.autoDownload = true; // Arka planda otomatik indir
 autoUpdater.logger = console;
 
 let audioProcess = null;
