@@ -40,7 +40,10 @@ class AudioEngine:
         self.filter_state = np.zeros((sos.shape[0], 2))
         
     def log(self, type_str: str, message: str):
-        print(json.dumps({"type": type_str, "message": message}), flush=True)
+        try:
+            print(json.dumps({"type": type_str, "message": message}), flush=True)
+        except (OSError, BrokenPipeError):
+            pass # Parent process (Electron) closed the pipe during shutdown
 
     def start(self, host: str, port: int):
         self.target_address = (str(host), int(port))

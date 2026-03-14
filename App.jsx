@@ -1195,12 +1195,12 @@ function MainApp(props) {
                 peer.on('open', onOpen);
                 peer.on('error', onError);
 
-                // 20 second timeout for signaling
+                // 30 second timeout for signaling (Increased for stability)
                 setTimeout(() => {
                     peer.off('open', onOpen);
                     peer.off('error', onError);
                     reject(new Error("Sunucuya bağlanılamadı. PeerJS zaman aşımı."));
-                }, 20000);
+                }, 30000);
             });
 
             // --- NATIVE CORE INTEGRATION ---
@@ -1218,7 +1218,7 @@ function MainApp(props) {
             // 2. Audio Pipeline Setup
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: { 
-                    noiseSuppression: true, // Re-enable browser suppression for extra filtering
+                    noiseSuppression: false, // DISABLE browser suppression to avoid CPU overhead and RNNoise conflict
                     echoCancellation: true, 
                     autoGainControl: true 
                 },
