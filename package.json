@@ -16,7 +16,7 @@
   },
   "name": "mekanda",
   "main": "main.cjs",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/tekyoube-ux/Mekanda.git"
@@ -40,7 +40,7 @@
       "provider": "github",
       "owner": "tekyoube-ux",
       "repo": "Mekanda",
-      "private": true
+      "private": false
     },
     "files": [
       "dist/**/*",
@@ -73,7 +73,7 @@
       "shortcutName": "Mekanda",
       "include": "build/installer.nsh",
       "language": "1055",
-      "artifactName": "${productName} Setup ${version}.${ext}"
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     }
   },
   "keywords": [],
