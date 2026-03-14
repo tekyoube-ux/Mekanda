@@ -731,15 +731,6 @@ function MainApp() {
             setChannels(allChannelsList.filter(c => c.type === 'text' || !c.type));
             setVoiceChannels(allChannelsList.filter(c => c.type === 'voice'));
             console.log("Kanallar güncellendi:", allChannelsList.length);
-
-            // Eğer URL'de kanal yoksa veya bu sunucuda değilse ilk metin kanalını seç ve navigasyon yap
-            if (activeServerId !== 'home' && allChannelsList.length > 0 && (!channelId || !allChannelsList.find(c => c.id === channelId))) {
-                const firstText = allChannelsList.find(c => c.type === 'text' || !c.type);
-                if (firstText) {
-                    console.log("Varsayılan kanala yönlendiriliyor:", firstText.id);
-                    navigate(`/${activeServerId}/${firstText.id}`, { replace: true });
-                }
-            }
         }, (error) => {
             console.error("Kanal listesi dinlenirken hata:", error);
         });

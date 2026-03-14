@@ -199,7 +199,7 @@ export default function Auth() {
                         </p>
                     </div>
                     <a
-                        href="https://www.dropbox.com/scl/fi/fmfy0ib6zob95hpke8ltf/Mekanda-Setup.exe?rlkey=37lwl4f8dyfhzt98emf2btkia&e=1&st=b4qg626a&dl=1"
+                        href="https://www.dropbox.com/scl/fi/so6n7mb2j349cx8bcip4r/Mekanda-Setup-1.0.5.exe?rlkey=4k1bkbryldim943zuq08pc2v8&st=fbrc6qqa&dl=1"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="premium-download-horizontal group"

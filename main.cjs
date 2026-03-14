@@ -126,8 +126,11 @@ function createWindow() {
       event.preventDefault();
       mainWindow.hide();
     }
-    return false;
   });
+
+  if (!isDev) {
+    autoUpdater.checkForUpdatesAndNotify();
+  }
 }
 
 function createTray() {
