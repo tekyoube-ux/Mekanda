@@ -3673,7 +3673,8 @@ function MainApp() {
                                 const dynamicCategories = [];
 
                                 // 1. Yetkililer (Sabit en üst)
-                                const admins = displayUsers.filter(u => u.role === 'admin');
+                                const admins = displayUsers.filter(u => u.role === 'admin')
+                                    .sort((a, b) => onlineUsers.includes(b.id) - onlineUsers.includes(a.id));
                                 if (admins.length > 0) {
                                     dynamicCategories.push({
                                         id: 'yetkililer',
@@ -3686,7 +3687,8 @@ function MainApp() {
                                 }
 
                                 // 2. Moderatörler (Sabit ikinci)
-                                const moderators = displayUsers.filter(u => u.role === 'moderator' && !displayedUserIds.has(u.id));
+                                const moderators = displayUsers.filter(u => u.role === 'moderator' && !displayedUserIds.has(u.id))
+                                    .sort((a, b) => onlineUsers.includes(b.id) - onlineUsers.includes(a.id));
                                 if (moderators.length > 0) {
                                     dynamicCategories.push({
                                         id: 'moderatorler',
@@ -3704,7 +3706,7 @@ function MainApp() {
                                         !displayedUserIds.has(u.id) &&
                                         u.customRoles &&
                                         u.customRoles.includes(role.id)
-                                    );
+                                    ).sort((a, b) => onlineUsers.includes(b.id) - onlineUsers.includes(a.id));
 
                                     if (roleUsers.length > 0) {
                                         // Dinamik renk tespiti
@@ -3731,7 +3733,8 @@ function MainApp() {
                                 });
 
                                 // 4. Diğer Üyeler (Hiç rolü kalmayanlar)
-                                const regulars = displayUsers.filter(u => !displayedUserIds.has(u.id));
+                                const regulars = displayUsers.filter(u => !displayedUserIds.has(u.id))
+                                    .sort((a, b) => onlineUsers.includes(b.id) - onlineUsers.includes(a.id));
                                 if (regulars.length > 0) {
                                     dynamicCategories.push({
                                         id: 'uyeler',
