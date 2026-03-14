@@ -1,8 +1,8 @@
-version: 1.1.7
+version: 1.1.8
 files:
-  - url: Mekanda-Setup-1.1.7.exe
-    sha512: SlNkMmbAGNRDVcY/e4HJgVPN5K/aMupMRgbDePF1irZARkvGkpJ8MA/ki015cA/ec/pMoJZtT5At5nqnXN+dkQ==
-    size: 176162087
-path: Mekanda-Setup-1.1.7.exe
-sha512: SlNkMmbAGNRDVcY/e4HJgVPN5K/aMupMRgbDePF1irZARkvGkpJ8MA/ki015cA/ec/pMoJZtT5At5nqnXN+dkQ==
-releaseDate: '2026-03-14T18:39:53.975Z'
+  - url: Mekanda-Setup-1.1.8.exe
+    sha512: CDrCj6KeisSY86PNI8mkvB2eBL87aIsLGol1UEti9xNEoPs2LPTcntmkIM9fPhg6IBuigIAxLd45YdxYywz9qA==
+    size: 176159569
+path: Mekanda-Setup-1.1.8.exe
+sha512: CDrCj6KeisSY86PNI8mkvB2eBL87aIsLGol1UEti9xNEoPs2LPTcntmkIM9fPhg6IBuigIAxLd45YdxYywz9qA==
+releaseDate: '2026-03-14T19:21:15.227Z'

@@ -1204,6 +1204,7 @@ function MainApp(props) {
             });
 
             // --- NATIVE CORE INTEGRATION ---
+            /* Disabling sidecar by default to prevents hardware conflicts causing crackling
             if (window.electronAPI && window.electronAPI.audioControl) {
                 console.log("Starting Native Core Audio Engine (Sidecar)...");
                 window.electronAPI.audioControl.start('127.0.0.1', 50000); 
@@ -1214,11 +1215,12 @@ function MainApp(props) {
                     console.log("[NativeCore]", log.message);
                 });
             }
+            */
 
             // 2. Audio Pipeline Setup
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: { 
-                    noiseSuppression: false, // DISABLE browser suppression to avoid CPU overhead and RNNoise conflict
+                    noiseSuppression: true, 
                     echoCancellation: true, 
                     autoGainControl: true 
                 },
@@ -1228,7 +1230,7 @@ function MainApp(props) {
             const audioContext = getAudioContext();
             const source = audioContext.createMediaStreamSource(stream);
             const destination = audioContext.createMediaStreamDestination();
-            const rnnoiseProcessor = audioContext.createScriptProcessor(1024, 1, 1);
+            const rnnoiseProcessor = audioContext.createScriptProcessor(4096, 1, 1); // Increased from 1024 to 4096 for stability
 
             // High-Performance CIRCULAR Buffering
             const frameSize = 480;
@@ -1288,8 +1290,8 @@ function MainApp(props) {
                     }
                 }
 
-                // 5. Fill output (1024 samples pre-buffer to match node size for stability)
-                if (!prebuffered && (outHead - outTail) > 1024) prebuffered = true;
+                // 5. Fill output (2048 samples pre-buffer for stability with larger node size)
+                if (!prebuffered && (outHead - outTail) > 2048) prebuffered = true;
 
                 for (let i = 0; i < output.length; i++) {
                     if (prebuffered && (outHead - outTail) > 0) {
@@ -1363,8 +1365,8 @@ function MainApp(props) {
                     if (val > maxVal) maxVal = val;
                 }
 
-                // Threshold: 6 (Increased to filter out breathing and background noise)
-                if (maxVal > 6) {
+                // Threshold: 3 (Balanced for better VAD responsiveness)
+                if (maxVal > 3) {
                     if (silenceTimer) {
                         clearTimeout(silenceTimer);
                         silenceTimer = null;
