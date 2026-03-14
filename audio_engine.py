@@ -24,8 +24,8 @@ class AudioEngine:
         self.stream_obj: Any = None
         
         # VAD & AGC Parameters
-        self.vad_threshold: float = 800.0  # Less sensitive to filter noise
-        self.vad_silence_limit: int = 25  # ~250ms
+        self.vad_threshold: float = 800.0
+        self.vad_silence_limit: int = 40  # Increase to 400ms for smoother tail
         self.silence_counter: int = 0
         self.is_speaking: bool = False
         
