@@ -24,14 +24,14 @@ class AudioEngine:
         self.stream_obj: Any = None
         
         # VAD & AGC Parameters
-        self.vad_threshold: float = 400.0  # Slightly more sensitive
+        self.vad_threshold: float = 800.0  # Less sensitive to filter noise
         self.vad_silence_limit: int = 25  # ~250ms
         self.silence_counter: int = 0
         self.is_speaking: bool = False
         
         self.target_energy: float = 6000.0 # Higher target for better presence
         self.gain: float = 1.0
-        self.max_gain: float = 12.0 # More range for quiet mics
+        self.max_gain: float = 6.0 # Lower max gain to avoid noise amplification
         
         # Filter State (Butterworth High-Pass 100Hz)
         # Removes low frequency rumble/hum below 100Hz

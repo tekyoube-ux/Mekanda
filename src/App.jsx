@@ -1218,7 +1218,7 @@ function MainApp(props) {
             // 2. Audio Pipeline Setup
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: { 
-                    noiseSuppression: false, // DISABLE browser noise suppression when using Native Core
+                    noiseSuppression: true, // Re-enable browser suppression for extra filtering
                     echoCancellation: true, 
                     autoGainControl: true 
                 },
@@ -1326,7 +1326,7 @@ function MainApp(props) {
 
             // 4. Master Gain Boost (Add a bit of warmth/volume)
             const masterGain = audioContext.createGain();
-            masterGain.gain.setValueAtTime(1.2, audioContext.currentTime); // 20% boost
+            masterGain.gain.setValueAtTime(1.0, audioContext.currentTime); // Normal gain to avoid noise boost
 
             // 5. Analyser for VAD Detection
             const vadAnalyser = audioContext.createAnalyser();
@@ -1363,8 +1363,8 @@ function MainApp(props) {
                     if (val > maxVal) maxVal = val;
                 }
 
-                // Threshold: 1 (Ultra-sensitive to ensure gate opens immediately)
-                if (maxVal > 1) {
+                // Threshold: 6 (Increased to filter out breathing and background noise)
+                if (maxVal > 6) {
                     if (silenceTimer) {
                         clearTimeout(silenceTimer);
                         silenceTimer = null;
