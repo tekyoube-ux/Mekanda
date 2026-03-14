@@ -1,0 +1,93 @@
+{
+  "dependencies": {
+    "@shiguredo/rnnoise-wasm": "^2025.1.5",
+    "acorn": "^8.16.0",
+    "autoprefixer": "^10.4.27",
+    "classnames": "^2.5.1",
+    "electron-updater": "^6.8.3",
+    "firebase": "^12.10.0",
+    "lucide-react": "^0.577.0",
+    "peerjs": "^1.5.5",
+    "postcss": "^8.5.8",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "name": "mekanda",
+  "main": "main.cjs",
+  "version": "1.0.5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tekyoube-ux/Mekanda.git"
+  },
+  "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "electron .",
+    "electron:build": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "com.mekanda.app",
+    "productName": "Mekanda",
+    "copyright": "Copyright © 2026 Mert",
+    "directories": {
+      "output": "dist_electron"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "tekyoube-ux",
+      "repo": "Mekanda",
+      "private": true
+    },
+    "files": [
+      "dist/**/*",
+      "bin/**/*",
+      "main.cjs",
+      "preload.cjs",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "./build/icons/icon.ico"
+    },
+    "asarUnpack": [
+      "bin/audio_engine.exe"
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerHeader": "./build/installerHeader.png",
+      "installerSidebar": "./build/installerSidebar.png",
+      "uninstallerSidebar": "./build/installerSidebar.png",
+      "installerHeaderIcon": "./build/icons/icon.ico",
+      "installerIcon": "./build/icons/icon.ico",
+      "uninstallDisplayName": "${productName}",
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Mekanda",
+      "include": "build/installer.nsh",
+      "language": "1055",
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    }
+  },
+  "keywords": [],
+  "author": "Mert",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "electron": "^41.0.1",
+    "electron-builder": "^26.8.1",
+    "electron-is-dev": "^3.0.1",
+    "esbuild": "^0.27.3",
+    "playwright": "^1.58.2",
+    "vite": "^7.3.1"
+  }
+}

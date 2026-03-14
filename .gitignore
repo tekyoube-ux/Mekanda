@@ -1,0 +1,12 @@
+node_modules
+dist
+dist_electron
+build
+build_cache
+eb_cache
+.env
+.venv
+*.exe
+*.log
+app_temp
+bin/audio_engine.exe
