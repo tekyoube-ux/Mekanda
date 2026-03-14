@@ -174,29 +174,7 @@ class ErrorBoundary extends React.Component {
     }
 }
 
-const UpdateNotification = () => {
-    const [updateInfo, setUpdateInfo] = useState(null);
-    const [progress, setProgress] = useState(null);
-    const [status, setStatus] = useState('idle'); // 'idle', 'available', 'downloading', 'ready'
-
-    useEffect(() => {
-        if (!window.electronAPI?.updateControl) return;
-
-        window.electronAPI.updateControl.onAvailable((info) => {
-            setUpdateInfo(info);
-            setStatus('available');
-        });
-
-        window.electronAPI.updateControl.onProgress((p) => {
-            setProgress(p);
-            setStatus('downloading');
-        });
-
-        window.electronAPI.updateControl.onDownloaded(() => {
-            setStatus('ready');
-        });
-    }, []);
-
+const UpdateNotification = ({ updateInfo, progress, status }) => {
     if (status === 'idle') return null;
 
     return (
@@ -2409,13 +2387,22 @@ function MainApp() {
     };
 
 
-    // Geçersiz veya erişilemeyen sunucu adresi yönlendirmesi
     useEffect(() => {
         if (isServersLoaded && activeServerId !== 'home' && !activeServer && !isCeo) {
             showToast('error', 'Sunucu bulunamadı veya erişim izniniz yok. Ana sayfaya yönlendiriliyorsunuz.');
             navigate('/home', { replace: true });
         }
     }, [isServersLoaded, activeServerId, activeServer, navigate]);
+
+    // Update auto-install logic: if we are in loading screen and update is ready, install immediately
+    useEffect(() => {
+        if ((loading || minLoading) && props.updateStatus === 'ready') {
+            const timer = setTimeout(() => {
+                window.electronAPI.updateControl.install();
+            }, 1000); // Give a brief moment for the user to see the "ready" state
+            return () => clearTimeout(timer);
+        }
+    }, [loading, minLoading, props.updateStatus]);
 
     if (loading || minLoading || (user && !isServersLoaded)) {
         return (
@@ -2454,15 +2441,32 @@ function MainApp() {
                     <div className="flex flex-col items-center space-y-6">
                         <div className="relative flex flex-col items-center">
                             <div className="flex items-center space-x-6 mb-4">
-                                <span className="text-[10px] font-black text-indigo-300/60 tracking-[0.8em] uppercase pl-1">MEKAN YÜKLENİYOR</span>
+                                <span className="text-[10px] font-black text-indigo-300/60 tracking-[0.8em] uppercase pl-1">
+                                    {props.updateStatus === 'downloading' ? 'GÜNCELLEME İNDİRİLİYOR' : 
+                                     props.updateStatus === 'ready' ? 'GÜNCELLEME HAZIR' : 'MEKAN YÜKLENİYOR'}
+                                </span>
                             </div>
                             
                             {/* Premium Progress Bar */}
                             <div className="w-64 h-[3px] bg-white/5 rounded-full overflow-hidden relative border border-white/5">
-                                <div className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-transparent via-indigo-400 to-transparent animate-[shimmer_4s_ease-in-out_infinite] shadow-[0_0_15px_rgba(129,140,248,0.8)]"></div>
-                                <div className="absolute top-0 left-0 h-full w-full bg-indigo-500/10 animate-pulse"></div>
+                                {props.updateStatus === 'downloading' ? (
+                                    <div 
+                                        className="absolute top-0 left-0 h-full bg-indigo-500 shadow-[0_0_15px_rgba(129,140,248,0.8)] transition-all duration-300 ease-out"
+                                        style={{ width: `${props.updateProgress?.percent || 0}%` }}
+                                    ></div>
+                                ) : (
+                                    <>
+                                        <div className="absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-transparent via-indigo-400 to-transparent animate-[shimmer_4s_ease-in-out_infinite] shadow-[0_0_15px_rgba(129,140,248,0.8)]"></div>
+                                        <div className="absolute top-0 left-0 h-full w-full bg-indigo-500/10 animate-pulse"></div>
+                                    </>
+                                )}
                             </div>
-                            {/* Glow removed */}
+                            
+                            {props.updateStatus === 'downloading' && (
+                                <span className="text-[10px] font-black text-indigo-400/80 mt-2 tracking-widest animate-pulse">
+                                    %{Math.round(props.updateProgress?.percent || 0)}
+                                </span>
+                            )}
                         </div>
 
                         {forceLoad && (
@@ -4817,10 +4821,32 @@ function MainApp() {
 }
 
 export default function App() {
+    const [updateInfo, setUpdateInfo] = useState(null);
+    const [progress, setProgress] = useState(null);
+    const [status, setStatus] = useState('idle'); // 'idle', 'available', 'downloading', 'ready'
+
+    useEffect(() => {
+        if (!window.electronAPI?.updateControl) return;
+
+        window.electronAPI.updateControl.onAvailable((info) => {
+            setUpdateInfo(info);
+            setStatus('available');
+        });
+
+        window.electronAPI.updateControl.onProgress((p) => {
+            setProgress(p);
+            setStatus('downloading');
+        });
+
+        window.electronAPI.updateControl.onDownloaded(() => {
+            setStatus('ready');
+        });
+    }, []);
+
     return (
         <ErrorBoundary>
-            <UpdateNotification />
-            <MainApp />
+            <UpdateNotification updateInfo={updateInfo} progress={progress} status={status} />
+            <MainApp updateStatus={status} updateProgress={progress} />
         </ErrorBoundary>
     );
 }

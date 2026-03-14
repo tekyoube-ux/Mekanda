@@ -16,7 +16,7 @@
   },
   "name": "mekanda",
   "main": "main.cjs",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tekyoube-ux/Mekanda.git"
@@ -60,8 +60,9 @@
       "bin/audio_engine.exe"
     ],
     "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "perMachine": false,
       "installerHeader": "./build/installerHeader.png",
       "installerSidebar": "./build/installerSidebar.png",
       "uninstallerSidebar": "./build/installerSidebar.png",
