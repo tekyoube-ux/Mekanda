@@ -14,6 +14,8 @@ let audioProcess = null;
 
 // Singleton server instance
 let staticServer = null;
+let mainWindow;
+let tray;
 
 function startStaticServer() {
   const serverPort = 3000;
