@@ -23,7 +23,7 @@ function startStaticServer() {
   
   if (!fs.existsSync(webRoot)) return null;
 
-  server = http.createServer((req, res) => {
+  staticServer = http.createServer((req, res) => {
     let filePath = path.join(webRoot, req.url === '/' ? 'index.html' : req.url);
     if (!fs.existsSync(filePath)) {
         filePath = path.join(webRoot, 'index.html'); // SPA desteği için
