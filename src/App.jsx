@@ -222,7 +222,7 @@ const UpdateNotification = ({ updateInfo, progress, status }) => {
     );
 };
 
-function MainApp() {
+function MainApp(props) {
     const { serverId, channelId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();

@@ -12,12 +12,9 @@ autoUpdater.logger = console;
 
 let audioProcess = null;
 
-let mainWindow;
-let tray;
-let server;
+// Singleton server instance
+let staticServer = null;
 
-// Google Login fix: Electron'da file:// protokolü Firebase Auth ile çakışır.
-// Bu yüzden build modunda bile minik bir sunucu üzerinden localhost ile çalıştırıyoruz.
 function startStaticServer() {
   const serverPort = 3000;
   const webRoot = path.join(__dirname, 'dist');
@@ -59,7 +56,22 @@ function startStaticServer() {
         res.end(content, 'utf-8');
       }
     });
-  }).listen(serverPort);
+  });
+
+  staticServer.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      console.log('Address in use, closing existing server or skipping...');
+      // If we can't listen, it usually means another instance is running 
+      // or the port hasn't been released yet.
+    }
+  });
+
+  try {
+    staticServer.listen(serverPort);
+  } catch (e) {
+    console.error("Failed to start static server:", e);
+    return null;
+  }
   
   return `http://localhost:${serverPort}`;
 }
@@ -177,14 +189,29 @@ function createTray() {
   });
 }
 
-app.whenReady().then(() => {
-  createWindow();
-  createTray();
+// Single Instance Lock
+const gotTheLock = app.requestSingleInstanceLock();
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
   });
-});
+
+  app.whenReady().then(() => {
+    createWindow();
+    createTray();
+
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
+  });
+}
 
 app.on('before-quit', () => {
   app.isQuitting = true;
